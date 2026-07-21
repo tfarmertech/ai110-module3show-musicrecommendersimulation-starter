@@ -100,13 +100,27 @@ You can add more tests in `tests/test_recommender.py`.
 Paste a sample of your recommender's output here as a text block so a reader can see what it produces:
 
 ```
-# e.g.:
-# User profile: genre=indie, mood=chill, energy=low
-# Recommendations:
-#   1. ...
-#   2. ...
-#   3. ...
-```
+Loaded songs: 18
+Top recommendations:
+1. Sunrise City - Neon Echo  (score: 4.29)
+     - genre match (+2.0)
+     - mood match (+1.0)
+     - energy close to target (+0.88)
+     - matches acoustic preference (+0.41)
+2. Gym Hero - Max Pulse  (score: 3.25)
+     - genre match (+2.0)
+     - energy close to target (+0.77)
+     - matches acoustic preference (+0.47)
+3. Rooftop Lights - Indigo Parade  (score: 2.27)
+     - mood match (+1.0)
+     - energy close to target (+0.94)
+     - matches acoustic preference (+0.33)
+4. Sundial Groove - The Brasswork  (score: 1.34)
+     - energy close to target (+0.92)
+     - matches acoustic preference (+0.42)
+5. Night Drive Loop - Neon Echo  (score: 1.34)
+     - energy close to target (+0.95)
+     - matches acoustic preference (+0.39)
 
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or demo video link here -->
 

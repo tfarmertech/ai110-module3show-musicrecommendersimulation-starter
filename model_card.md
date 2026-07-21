@@ -1,63 +1,22 @@
 # 🎧 Model Card: Music Recommender Simulation
 
 ## 1. Model Name  
-
-Give your model a short, descriptive name.  
-Example: **VibeFinder 1.0**  
-
+VibeFinder 1.0
 ---
 
 ## 2. Intended Use  
 
-Describe what your recommender is designed to do and who it is for. 
-
-Prompts:  
-
-- What kind of recommendations does it generate  
-- What assumptions does it make about the user  
-- Is this for real users or classroom exploration  
-
----
+VibeFinder suggests the top 5 songs from an 18-song catalog based on a listener's stated genre, mood, energy, and acousticness preferences. It assumes the user can articulate their taste directly (a favorite genre and mood, a target energy level, and whether they like acoustic sound) rather than inferring taste from listening history. This is a classroom exploration project — a simplified model built to understand how content-based recommenders work, not a production system for real listeners. It works best as a teaching tool for showing how scoring weights shape rankings, not as a music discovery app.
 
 ## 3. How the Model Works  
 
-Explain your scoring approach in simple language.  
-
-Prompts:  
-
-- What features of each song are used (genre, energy, mood, etc.)  
-- What user preferences are considered  
-- How does the model turn those into a score  
-- What changes did you make from the starter logic  
-
-Avoid code here. Pretend you are explaining the idea to a friend who does not program.
-
----
+VibeFinder looks at four things about each song: its genre, its mood, how energetic it is, and how acoustic it sounds. It compares these to what a listener says they want. If the song's genre matches the listener's favorite genre, it earns 2 points — the biggest single bonus. If the mood matches, it earns 1 point. Then it checks how close the song's energy is to the listener's target energy, awarding up to 1 point for a near-perfect match. Finally, it checks whether the song's acoustic level agrees with whether the listener likes acoustic sound, awarding up to half a point. All four scores get added together, and the songs with the highest total scores are recommended, along with a plain-language list of which of these things matched. The main change from the starter logic: the scoring function now returns why a song scored the way it did, not just the number.
 
 ## 4. Data  
-
-Describe the dataset the model uses.  
-
-Prompts:  
-
-- How many songs are in the catalog  
-- What genres or moods are represented  
-- Did you add or remove data  
-- Are there parts of musical taste missing in the dataset  
-
----
-
+The catalog has 18 songs, up from the original 10 in the starter file. Each song has a genre, a mood, and four numeric features (energy, tempo, valence, danceability, acousticness), all on consistent scales. 15 different genres and a wide range of moods are represented, from happy and chill to angry and melancholic. The dataset is still very small — most genres have exactly one song, so it's more of a proof-of-concept catalog than a realistic music library. Genuine musical nuance (subgenres, lyrical themes, instrumentation) isn't captured at all; a song is only as rich as its four numbers and two tags.
 ## 5. Strengths  
 
-Where does your system seem to work well  
-
-Prompts:  
-
-- User types for which it gives reasonable results  
-- Any patterns you think your scoring captures correctly  
-- Cases where the recommendations matched your intuition  
-
----
+The system works well for users whose taste maps cleanly onto one existing genre and mood combination in the catalog — for those cases, it reliably surfaces the one song that fits and explains exactly why. It also handles energy preferences gracefully: even without a genre or mood match, the energy-closeness formula correctly favors songs that are numerically similar to the target, which matched my intuition in testing (a "chill lofi" profile pulled toward genuinely low-energy tracks, not random ones). The reason-list output is a real strength — it makes an otherwise opaque score explainable in one glance, which is exactly what the rubric asks for.
 
 ## 6. Limitations and Bias 
 
@@ -87,23 +46,8 @@ Any simple tests or comparisons you ran: I ran a before/after weight experiment 
 
 ## 8. Future Work  
 
-Ideas for how you would improve the model next.  
-
-Prompts:  
-
-- Additional features or preferences  
-- Better ways to explain recommendations  
-- Improving diversity among the top results  
-- Handling more complex user tastes  
-
----
+If I kept developing this, I'd start by growing the catalog so each genre has multiple songs — right now the genre weight mostly acts as a lookup rather than a real ranking decision, and more density would let energy and mood actually compete for the top spot. I'd also add a diversity constraint to the top-K results (e.g. don't return two songs by the same artist, or cap how many songs from one genre can appear) since right now a small, tightly-clustered set of songs dominates almost every profile. Finally, I'd experiment with incorporating valence as its own scored feature rather than folding it into mood — the two aren't quite the same thing, and testing showed real cases where mood alone missed the emotional tone a song's valence would have caught.
 
 ## 9. Personal Reflection  
 
-A few sentences about your experience.  
-
-Prompts:  
-
-- What you learned about recommender systems  
-- Something unexpected or interesting you discovered  
-- How this changed the way you think about music recommendation apps  
+My biggest learning moment was running the weight-sensitivity experiment in Phase 4 — seeing Gym Hero lose the top spot the instant I rebalanced energy against genre made the abstract idea of "scoring weights shape outcomes" feel concrete instead of theoretical. AI tools helped most with the repetitive parts — writing CSV rows, drafting docstrings, formatting terminal output — but I had to double-check anything involving actual judgment calls, like whether a proposed adversarial profile was genuinely testing something useful or just noise, and whether the bias claims it generated were backed by real evidence from the data rather than a plausible-sounding guess. What surprised me most is how "recommendation-like" a handful of if/else weighted rules can feel — with only four features and simple arithmetic, the system still produces rankings that mostly match my own intuition, which made the filter-bubble risk feel more real: a system this simple can still create the same narrowing effect as a much more sophisticated one, just for more obvious reasons. If I extended this project, I'd want to try a version with real collaborative filtering data (even a tiny simulated "other users liked" signal) just to see how differently the recommendations behave once the system isn't purely comparing a song to itself.

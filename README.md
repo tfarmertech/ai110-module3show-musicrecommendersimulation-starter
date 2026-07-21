@@ -2,17 +2,7 @@
 
 ## Project Summary
 
-In this project you will build and explain a small music recommender system.
-
-Your goal is to:
-
-- Represent songs and a user "taste profile" as data
-- Design a scoring rule that turns that data into recommendations
-- Evaluate what your system gets right and wrong
-- Reflect on how this mirrors real world AI recommenders
-
-Replace this paragraph with your own summary of what your version does.
-
+VibeFinder 1.0 is a content-based music recommender that suggests songs from an 18-track catalog based on a listener's genre, mood, energy, and acousticness preferences. It scores every song in the catalog against a user's taste profile using a weighted point system (genre and mood matches, plus closeness on two numeric features), then ranks the results and explains each recommendation with a plain-language list of what matched. There's no collaborative filtering and no other users — every recommendation is a direct, transparent comparison between one song and one listener's stated preferences.
 ---
 
 ## How The System Works
@@ -128,13 +118,7 @@ Top recommendations:
 
 ## Experiments You Tried
 
-Use this section to document the experiments you ran. For example:
-
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
-
----
+I ran a weight-sensitivity experiment: doubling the energy weight (1.0 → 2.0) while halving the genre weight (2.0 → 1.0), then comparing the top-5 results for several profiles before reverting the change. For the Default Pop/Happy profile, this flipped the #1 result from Gym Hero to Rooftop Lights — proof that under the original weights, a genre match alone was strong enough to beat a song with a much closer energy fit. I also stress-tested the system across six user profiles (four realistic, two adversarial with conflicting or nonexistent preference combinations) to see how consistently it behaved. The main pattern I found: Gym Hero and Sunrise City dominated 4 of 6 profiles' top 5, not because they were universally great fits, but because the catalog has so few songs per genre that the genre bonus overwhelms everything else once it applies.
 
 ## Limitations and Risks
 
@@ -142,24 +126,13 @@ Summarize some limitations of your recommender.
 
 Examples:
 
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
-
-You will go deeper on this in your model card.
-
----
+The catalog is tiny — 18 songs across 15 genres means most genres have exactly one representative track, so the recommender often isn't really ranking anything within a genre, it's just returning the one song that exists. It has no understanding of lyrics, instrumentation, or subjective "vibe" beyond the four numbers and two tags each song carries — two songs that feel completely different to a human listener can score identically if their genre, mood, energy, and acousticness happen to line up. It also clearly over-favors genre: the +2.0 genre-match weight can let a same-genre song beat a much better mood/energy fit tagged differently, which is the same filter-bubble dynamic real-world content-based recommenders create at scale. See model_card.md for a deeper breakdown with specific evidence from testing.
 
 ## Reflection
 
-Read and complete `model_card.md`:
+Working through this project made the abstract idea of "recommenders turn data into predictions" feel concrete rather than theoretical. Watching a single weight change flip which song ranked #1 was the clearest moment of that — it's easy to say a scoring system reflects its weights, but seeing Gym Hero lose the top spot the instant I rebalanced energy against genre made it obvious how much of what looks like "taste-matching" is really just arithmetic that happens to line up with intuition often enough to feel meaningful.
 
-[**Model Card**](model_card.md)
-
-Write 1 to 2 paragraphs here about what you learned:
-
-- about how recommenders turn data into predictions
-- about where bias or unfairness could show up in systems like this
+The bias risks were the more sobering part. Even with only four features and simple weighted addition — nothing close to a real recommendation engine — the system still produced a narrowing effect: a handful of songs kept resurfacing across unrelated user profiles, and one underlying cause (severe genre imbalance in the catalog) was something I only found by deliberately testing adversarial profiles and comparing results across them rather than just trusting the first output that looked reasonable. That's probably the biggest lesson from this project: a recommender doesn't need to be sophisticated to create a filter bubble — it just needs one dominant, poorly-balanced signal and a dataset too small to give that signal real competition.
 
 
 

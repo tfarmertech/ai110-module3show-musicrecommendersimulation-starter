@@ -20,7 +20,6 @@ The system works well for users whose taste maps cleanly onto one existing genre
 
 ## 6. Limitations and Bias 
 
-6. Limitations and Bias
 
 Features it does not consider: The system ignores tempo_bpm, danceability, and valence entirely — it only scores on genre, mood, energy, and acousticness. This means two songs with wildly different tempos or "positivity" can score identically if their genre/mood/energy/acousticness line up, even if one would feel completely different to a listener.
 
